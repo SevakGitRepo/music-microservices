@@ -1,0 +1,346 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="AutoImportSettings">
+    <option name="autoReloadType" value="SELECTIVE" />
+  </component>
+  <component name="BackgroundAgentGlobalSettings">
+    <option name="selectedModelId" value="auto" />
+  </component>
+  <component name="ChangeListManager">
+    <list default="true" id="736c4306-d0db-4651-812d-d2f787dd5e98" name="Changes" comment="" />
+    <option name="SHOW_DIALOG" value="false" />
+    <option name="HIGHLIGHT_CONFLICTS" value="true" />
+    <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
+    <option name="LAST_RESOLUTION" value="IGNORE" />
+  </component>
+  <component name="CopilotChats">
+    <option name="panelChat">
+      <chat>
+        <option name="activeSessionId" value="ff494df9-b06f-4983-b72c-512f937f4c69" />
+        <option name="sessions">
+          <session>
+            <option name="chatType" value="PANEL" />
+            <option name="id" value="44ac2360-9c89-42b2-8af0-800a7694fc50" />
+            <option name="modeId" value="Agent" />
+            <option name="modelType" value="builtin_family" />
+            <option name="modelValue" value="auto" />
+            <option name="status" value="Completed" />
+            <option name="targetType" value="LOCAL" />
+          </session>
+          <session>
+            <option name="chatType" value="PANEL" />
+            <option name="id" value="668698b9-af5f-4386-9ac3-213b583dfaf6" />
+            <option name="modeId" value="Agent" />
+            <option name="modelType" value="builtin_family" />
+            <option name="modelValue" value="auto" />
+            <option name="targetType" value="LOCAL" />
+          </session>
+          <session>
+            <option name="chatType" value="PANEL" />
+            <option name="id" value="2a82429a-8058-4037-b306-998dc741d50a" />
+            <option name="modeId" value="Ask" />
+            <option name="modelType" value="builtin_family" />
+            <option name="modelValue" value="auto" />
+            <option name="targetType" value="LOCAL" />
+          </session>
+          <session>
+            <option name="chatType" value="PANEL" />
+            <option name="id" value="8fd790a3-3680-4559-b57e-f23bd5763ccc" />
+            <option name="modeId" value="Ask" />
+            <option name="modelType" value="builtin_family" />
+            <option name="modelValue" value="auto" />
+            <option name="targetType" value="LOCAL" />
+          </session>
+          <session>
+            <option name="chatType" value="PANEL" />
+            <option name="id" value="c0b9a7b3-d319-4101-aec7-80cf8680cfea" />
+            <option name="modeId" value="Ask" />
+            <option name="modelType" value="builtin_family" />
+            <option name="modelValue" value="auto" />
+            <option name="targetType" value="LOCAL" />
+          </session>
+          <session>
+            <option name="chatType" value="PANEL" />
+            <option name="id" value="ff494df9-b06f-4983-b72c-512f937f4c69" />
+            <option name="modeId" value="Ask" />
+            <option name="modelType" value="builtin_family" />
+            <option name="modelValue" value="auto" />
+            <option name="targetType" value="LOCAL" />
+          </session>
+        </option>
+        <option name="type" value="PANEL" />
+      </chat>
+    </option>
+  </component>
+  <component name="CopilotPersistence">
+    <persistenceIdMap>
+      <entry key="_/Users/Sevak_Tovmasyan/Desktop/music-microservices" value="3HdPocKG23AV60AOzgtFkb6dBQ4" />
+    </persistenceIdMap>
+  </component>
+  <component name="CopilotUserSelectedModel">
+    <selectedModels>
+      <entry key="agent-panel" value="Auto" />
+      <entry key="chat-panel" value="Auto" />
+    </selectedModels>
+  </component>
+  <component name="ExternalProjectsData">
+    <projectState path="$PROJECT_DIR$">
+      <ProjectState />
+    </projectState>
+    <projectState path="$PROJECT_DIR$/resource-service">
+      <ProjectState />
+    </projectState>
+    <projectState path="$PROJECT_DIR$/song-service">
+      <ProjectState />
+    </projectState>
+  </component>
+  <component name="ExternalProjectsManager">
+    <system id="GRADLE">
+      <state>
+        <projects_view>
+          <tree_state>
+            <expand>
+              <path>
+                <item name="" type="6a2764b6:ExternalProjectsStructure$RootNode" />
+                <item name="music-microservices" type="f1a62948:ProjectNode" />
+              </path>
+              <path>
+                <item name="" type="6a2764b6:ExternalProjectsStructure$RootNode" />
+                <item name="music-microservices" type="f1a62948:ProjectNode" />
+                <item name="resource-service" type="2d1252cf:ModuleNode" />
+              </path>
+            </expand>
+            <select />
+          </tree_state>
+        </projects_view>
+      </state>
+    </system>
+  </component>
+  <component name="Git.Settings">
+    <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
+  </component>
+  <component name="KubernetesApiPersistence">{}</component>
+  <component name="KubernetesApiProvider">{
+  &quot;isMigrated&quot;: true
+}</component>
+  <component name="McpProjectServerCommands">
+    <commands />
+    <urls />
+  </component>
+  <component name="NextEditCompletionFeaturesState">
+    <decayedCancelled>
+      <entry key="MS100" value="1.000000000000001" />
+      <entry key="MS500" value="1.0010194452416228" />
+      <entry key="S2" value="1.1786861846501344" />
+      <entry key="S5" value="1.5021533800344034" />
+      <entry key="S10" value="1.7086278148890313" />
+      <entry key="S30" value="1.8915370547838242" />
+      <entry key="S60" value="1.9442123991898348" />
+      <entry key="M2" value="1.971705922174932" />
+      <entry key="M5" value="1.9885848254115484" />
+      <entry key="M10" value="1.9942760307940388" />
+      <entry key="M15" value="1.9961803708122967" />
+      <entry key="M30" value="1.998088358218999" />
+      <entry key="H1" value="1.9990437218755739" />
+      <entry key="H2" value="1.9995217465746173" />
+      <entry key="H4" value="1.9997608446896775" />
+      <entry key="D1" value="1.999960136809139" />
+      <entry key="W1" value="1.999994305161156" />
+    </decayedCancelled>
+    <decayedSelected>
+      <entry key="MS100" value="0.0" />
+      <entry key="MS500" value="0.0" />
+      <entry key="S2" value="0.0" />
+      <entry key="S5" value="0.0" />
+      <entry key="S10" value="0.0" />
+      <entry key="S30" value="0.0" />
+      <entry key="S60" value="6.8714391666765E-203" />
+      <entry key="M2" value="1.2561850743275532E-101" />
+      <entry key="M5" value="7.941591486294911E-41" />
+      <entry key="M10" value="1.5234455826469275E-20" />
+      <entry key="M15" value="8.835442346511933E-14" />
+      <entry key="M30" value="5.140078378573347E-7" />
+      <entry key="H1" value="0.0012412666268824192" />
+      <entry key="H2" value="0.06101653813432363" />
+      <entry key="H4" value="0.42783168747040096" />
+      <entry key="D1" value="2.1684276673249534" />
+      <entry key="W1" value="2.864057560650087" />
+    </decayedSelected>
+    <decayedShown>
+      <entry key="MS100" value="1.1010817919640308E-15" />
+      <entry key="MS500" value="0.001063510463654098" />
+      <entry key="S2" value="0.26016111365145783" />
+      <entry key="S5" value="0.8689367160762342" />
+      <entry key="S10" value="1.3142542146123517" />
+      <entry key="S30" value="1.737597904956021" />
+      <entry key="S60" value="1.8640280601633785" />
+      <entry key="M2" value="1.9307761286632492" />
+      <entry key="M5" value="1.9720073696230525" />
+      <entry key="M10" value="1.9859526636797311" />
+      <entry key="M15" value="1.9906237331838095" />
+      <entry key="M30" value="1.9953066825912693" />
+      <entry key="H1" value="1.9988922779427005" />
+      <entry key="H2" value="2.059826064946699" />
+      <entry key="H4" value="2.4271883583344196" />
+      <entry key="D1" value="4.168282426192946" />
+      <entry key="W1" value="4.864034640580176" />
+    </decayedShown>
+  </component>
+  <component name="ProjectColorInfo">{
+  &quot;associatedIndex&quot;: 8,
+  &quot;fromUser&quot;: false
+}</component>
+  <component name="ProjectId" id="3HdPocKG23AV60AOzgtFkb6dBQ4" />
+  <component name="ProjectSessionTemplates">
+    <option name="panelTemplate">
+      <template>
+        <option name="modeId" value="Agent" />
+        <option name="model">
+          <model>
+            <option name="modelType" value="builtin_id" />
+            <option name="modelValue" value="auto" />
+          </model>
+        </option>
+        <option name="targetType" value="LOCAL" />
+      </template>
+    </option>
+  </component>
+  <component name="ProjectViewState">
+    <option name="hideEmptyMiddlePackages" value="true" />
+    <option name="showLibraryContents" value="true" />
+  </component>
+  <component name="PropertiesComponent"><![CDATA[{
+  "keyToString": {
+    "Gradle.Build music-microservices.executor": "Run",
+    "Gradle.Build resource-service.executor": "Run",
+    "ModuleVcsDetector.initialDetectionPerformed": "true",
+    "RequestMappingsPanelOrder0": "0",
+    "RequestMappingsPanelOrder1": "1",
+    "RequestMappingsPanelWidth0": "75",
+    "RequestMappingsPanelWidth1": "75",
+    "RunOnceActivity.MCP Project settings loaded": "true",
+    "RunOnceActivity.ShowReadmeOnStart": "true",
+    "RunOnceActivity.TerminalTabsStorage.copyFrom.TerminalArrangementManager.252": "true",
+    "RunOnceActivity.typescript.service.memoryLimit.init": "true",
+    "Spring Boot.ResourceServiceApplication (1).executor": "Debug",
+    "Spring Boot.ResourceServiceApplication.executor": "Run",
+    "Spring Boot.SongServiceApplication (1).executor": "Run",
+    "Spring Boot.SongServiceApplication.executor": "Run",
+    "codeWithMe.voiceChat.enabledByDefault": "false",
+    "com.intellij.ml.llm.matterhorn.ej.ui.settings.DefaultModelSelectionForGA.v1": "true",
+    "copilot.chat.legacySessionMetadata.migrated": "true",
+    "git-widget-placeholder": "master",
+    "junie.onboarding.icon.badge.shown": "true",
+    "kotlin-language-version-configured": "true",
+    "last_opened_file_path": "/Users/Sevak_Tovmasyan/Desktop/music-microservices",
+    "node.js.detected.package.eslint": "true",
+    "node.js.detected.package.tslint": "true",
+    "node.js.selected.package.eslint": "(autodetect)",
+    "node.js.selected.package.tslint": "(autodetect)",
+    "nodejs_package_manager_path": "npm",
+    "settings.editor.selected.configurable": "reference.settingsdialog.project.gradle",
+    "to.speed.mode.migration.done": "true",
+    "vue.rearranger.settings.migration": "true"
+  },
+  "keyToStringList": {
+    "DatabaseDriversLRU": [
+      "postgresql"
+    ]
+  }
+}]]></component>
+  <component name="RunManager" selected="Spring Boot.ResourceServiceApplication">
+    <configuration name="ResourceServiceApplication" type="SpringBootApplicationConfigurationType" factoryName="Spring Boot" nameIsGenerated="true">
+      <module name="music-microservices.resource-service.main" />
+      <option name="SPRING_BOOT_MAIN_CLASS" value="com.epam.resourceservice.ResourceServiceApplication" />
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
+    <configuration name="SongServiceApplication" type="SpringBootApplicationConfigurationType" factoryName="Spring Boot" nameIsGenerated="true">
+      <module name="music-microservices.song-service.main" />
+      <option name="SPRING_BOOT_MAIN_CLASS" value="com.epam.songservice.SongServiceApplication" />
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
+    <list>
+      <item itemvalue="Spring Boot.ResourceServiceApplication" />
+      <item itemvalue="Spring Boot.SongServiceApplication" />
+    </list>
+  </component>
+  <component name="SharedIndexes">
+    <attachedChunks>
+      <set>
+        <option value="bundled-jdk-30f59d01ecdd-34e2839f716b-intellij.indexing.shared.core-IU-262.9437.185" />
+        <option value="bundled-js-predefined-d6986cc7102b-4abd2a77f808-JavaScript-IU-262.9437.185" />
+      </set>
+    </attachedChunks>
+  </component>
+  <component name="TaskManager">
+    <task active="true" id="Default" summary="Default task">
+      <changelist id="736c4306-d0db-4651-812d-d2f787dd5e98" name="Changes" comment="" />
+      <created>1786195148911</created>
+      <option name="number" value="Default" />
+      <option name="presentableId" value="Default" />
+      <updated>1786195148911</updated>
+      <workItem from="1786195149926" duration="43000" />
+      <workItem from="1786198774020" duration="13000" />
+      <workItem from="1786198837832" duration="1665000" />
+      <workItem from="1786200534853" duration="5013000" />
+      <workItem from="1786308937388" duration="11168000" />
+      <workItem from="1786378755704" duration="3996000" />
+      <workItem from="1786391678823" duration="591000" />
+      <workItem from="1786392335550" duration="259000" />
+      <workItem from="1786392609218" duration="621000" />
+      <workItem from="1786399919648" duration="3950000" />
+      <workItem from="1786441947641" duration="892000" />
+      <workItem from="1786442932674" duration="7886000" />
+    </task>
+    <servers />
+  </component>
+  <component name="TypeScriptGeneratedFilesManager">
+    <option name="version" value="3" />
+  </component>
+  <component name="XDebuggerManager">
+    <breakpoint-manager>
+      <breakpoints>
+        <line-breakpoint enabled="true" type="java-line">
+          <url>file://$PROJECT_DIR$/resource-service/src/main/java/com/epam/resourceservice/controller/ResourceController.java</url>
+          <line>44</line>
+          <option name="timeStamp" value="1" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" type="java-line">
+          <url>file://$PROJECT_DIR$/resource-service/src/main/java/com/epam/resourceservice/service/ResourceService.java</url>
+          <line>29</line>
+          <option name="timeStamp" value="10" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" type="java-line">
+          <url>file://$PROJECT_DIR$/resource-service/src/main/java/com/epam/resourceservice/service/SongMetadataPayloadMapper.java</url>
+          <line>41</line>
+          <option name="timeStamp" value="11" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" type="java-line">
+          <url>file://$PROJECT_DIR$/resource-service/src/main/java/com/epam/resourceservice/service/ResourceService.java</url>
+          <line>38</line>
+          <option name="timeStamp" value="16" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" type="java-line">
+          <url>file://$PROJECT_DIR$/song-service/src/main/java/com/epam/songservice/song/controller/SongMetadataController.java</url>
+          <line>63</line>
+          <option name="timeStamp" value="18" />
+        </line-breakpoint>
+      </breakpoints>
+    </breakpoint-manager>
+  </component>
+  <component name="com.intellij.coverage.CoverageDataManagerImpl">
+    <SUITE FILE_PATH="coverage/music_microservices$ResourceServiceApplication.ic" NAME="ResourceServiceApplication Coverage Results" MODIFIED="1786391976336" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="idea" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="true" />
+  </component>
+  <component name="github-copilot-workspace">
+    <instructionFileLocations>
+      <option value=".github/instructions" />
+    </instructionFileLocations>
+    <promptFileLocations>
+      <option value=".github/prompts" />
+    </promptFileLocations>
+  </component>
+</project>

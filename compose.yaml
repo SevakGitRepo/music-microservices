@@ -1,0 +1,29 @@
+services:
+
+  resource-postgres:
+    image: postgres:16-alpine
+    container_name: resource-postgres
+    environment:
+      POSTGRES_DB: resource_db
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+    ports:
+      - "5432:5432"
+    volumes:
+      - resource-postgres-data:/var/lib/postgresql/data
+
+  song-postgres:
+    image: postgres:16-alpine
+    container_name: song-postgres
+    environment:
+      POSTGRES_DB: song_db
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+    ports:
+      - "5433:5432"
+    volumes:
+      - song-postgres-data:/var/lib/postgresql/data
+
+volumes:
+  resource-postgres-data:
+  song-postgres-data:
