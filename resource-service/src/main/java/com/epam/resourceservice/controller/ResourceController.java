@@ -24,7 +24,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 @RestController
 @RequiredArgsConstructor
-@RequestMapping("/api/v1/resources")
+@RequestMapping("/resources")
 @Tag(name = "Resources", description = "CRUD operations for MP3 resources")
 public class ResourceController {
 
