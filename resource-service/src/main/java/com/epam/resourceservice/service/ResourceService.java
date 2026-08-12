@@ -7,10 +7,7 @@ import com.epam.resourceservice.exception.BadRequestException;
 import com.epam.resourceservice.exception.NotFoundException;
 import com.epam.resourceservice.exception.ValidationException;
 import com.epam.resourceservice.repository.ResourceRepository;
-import java.nio.charset.StandardCharsets;
 import java.util.List;
-import java.util.Set;
-import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -22,7 +19,6 @@ import org.springframework.transaction.annotation.Transactional;
 public class ResourceService {
 
   private static final String INVALID_MP3_MESSAGE = "The request body is invalid MP3";
-  private static final byte[] FALLBACK_MP3_BYTES = "ID3".getBytes(StandardCharsets.US_ASCII);
   private static final int MAX_UPLOAD_BYTES = 20 * 1024 * 1024;
 
   private final ResourceRepository resourceRepository;
@@ -33,19 +29,17 @@ public class ResourceService {
 
   @Transactional
   public Long upload(byte[] data) {
-    byte[] payload = normalizeUploadPayload(data);
+    validateMp3Payload(data);
+    validateUploadSize(data.length);
 
-    validateMp3Payload(payload);
-    validateUploadSize(payload.length);
+    log.info("Uploading new MP3 resource, size={} bytes", data.length);
 
-    log.info("Uploading new MP3 resource, size={} bytes", payload.length);
-
-    Resource saved = createAndSaveResource(payload);
+    Resource saved = createAndSaveResource(data);
     Long savedId = saved.getId();
     log.info("Resource saved and persisted to database with id={}, size={} bytes", savedId,
-        payload.length);
+        data.length);
 
-    syncMetadataBestEffort(savedId, payload);
+    syncMetadataBestEffort(savedId, data);
     log.debug("Upload transaction completed successfully for resourceId={}", savedId);
     return savedId;
   }
@@ -63,12 +57,9 @@ public class ResourceService {
   public DeleteResourcesResponse deleteResources(String idCsv) {
     log.info("Delete request received for ids: {}", idCsv);
     List<Long> requestedIds = idCsvParser.parseIds(idCsv);
-    Set<Long> existingResourceIds = resourceRepository.findAllById(requestedIds).stream()
-        .map(Resource::getId)
-        .collect(Collectors.toSet());
 
     List<Long> deletedIds = requestedIds.stream()
-        .filter(existingResourceIds::contains)
+        .filter(resourceRepository::existsById)
         .toList();
 
     log.info("Found {} resource(s) to delete: {}", deletedIds.size(), deletedIds);
@@ -98,13 +89,6 @@ public class ResourceService {
     log.info("MP3 validation successful for file size {} bytes", data.length);
   }
 
-  private byte[] normalizeUploadPayload(byte[] data) {
-    if (data == null || data.length == 0) {
-      log.warn("Upload payload is empty. Using fallback MP3 signature bytes.");
-      return FALLBACK_MP3_BYTES;
-    }
-    return data;
-  }
 
   private void validateUploadSize(int payloadSize) {
     if (payloadSize > MAX_UPLOAD_BYTES) {
