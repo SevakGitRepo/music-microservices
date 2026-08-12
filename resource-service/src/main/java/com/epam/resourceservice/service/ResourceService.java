@@ -113,14 +113,17 @@ public class ResourceService {
     } catch (ValidationException validationException) {
       log.warn("Metadata validation failed for resourceId={}: {}. Metadata sync will be skipped.",
           resourceId, validationException.getDetails());
+      throw validationException;
     } catch (IllegalStateException illegalStateException) {
       log.warn(
           "Failed to send metadata to Song Service for resourceId={}: {}. Metadata sync will be skipped.",
           resourceId, illegalStateException.getMessage());
+      throw illegalStateException;
     } catch (Exception exception) {
       log.warn(
           "Unexpected error during metadata sync for resourceId={}: {}. Metadata sync will be skipped.",
           resourceId, exception.getMessage(), exception);
+      throw exception;
     }
   }
 
