@@ -68,7 +68,7 @@ public class ResourceService {
         .collect(Collectors.toSet());
 
     List<Long> deletedIds = requestedIds.stream()
-        .filter(id -> existingResourceIds.contains(id) || songClient.metadataExists(id))
+        .filter(existingResourceIds::contains)
         .toList();
 
     log.info("Found {} resource(s) to delete: {}", deletedIds.size(), deletedIds);
