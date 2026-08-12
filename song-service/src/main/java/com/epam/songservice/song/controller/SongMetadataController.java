@@ -19,6 +19,7 @@ import jakarta.validation.constraints.Size;
 import java.util.Arrays;
 import java.util.List;
 import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -60,8 +61,8 @@ public class SongMetadataController {
               schema = @Schema(implementation = ApiErrorResponse.class)))
   })
   @PostMapping
-  public CreateSongMetadataResponse create(@Valid @RequestBody CreateSongMetadataRequest request) {
-    return new CreateSongMetadataResponse(service.create(request));
+  public ResponseEntity<CreateSongMetadataResponse> create(@Valid @RequestBody CreateSongMetadataRequest request) {
+    return ResponseEntity.ok(new CreateSongMetadataResponse(service.create(request)));
   }
 
   @Operation(summary = "Get song metadata", description = "Retrieves song metadata by ID")
@@ -80,10 +81,10 @@ public class SongMetadataController {
               schema = @Schema(implementation = ApiErrorResponse.class)))
   })
   @GetMapping("/{id}")
-  public SongMetadataResponse getById(
+  public ResponseEntity<SongMetadataResponse> getById(
       @Parameter(description = "The ID of the song metadata to retrieve", example = "1")
       @PathVariable @Positive Long id) {
-    return service.getById(id);
+    return ResponseEntity.ok(service.getById(id));
   }
 
   @Operation(summary = "Delete song metadata",
@@ -100,14 +101,14 @@ public class SongMetadataController {
               schema = @Schema(implementation = ApiErrorResponse.class)))
   })
   @DeleteMapping
-  public DeleteSongMetadataResponse delete(
+  public ResponseEntity<DeleteSongMetadataResponse> delete(
       @Parameter(description = "Comma-separated list of song metadata IDs to delete", example = "1,2")
       @RequestParam("id")
       @Size(max = 200)
       @Pattern(regexp = ID_CSV_PATTERN, message = "id must be a comma-separated list of positive integers")
       String id
   ) {
-    return new DeleteSongMetadataResponse(service.deleteByIds(parseCsvIds(id)));
+    return ResponseEntity.ok(new DeleteSongMetadataResponse(service.deleteByIds(parseCsvIds(id))));
   }
 
   private List<Long> parseCsvIds(String csvIds) {
