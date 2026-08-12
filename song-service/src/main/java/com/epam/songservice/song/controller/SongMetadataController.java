@@ -16,8 +16,6 @@ import jakarta.validation.Valid;
 import jakarta.validation.constraints.Pattern;
 import jakarta.validation.constraints.Positive;
 import jakarta.validation.constraints.Size;
-import java.util.Arrays;
-import java.util.List;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
@@ -37,7 +35,6 @@ import org.springframework.web.bind.annotation.RestController;
 public class SongMetadataController {
 
   private static final String ID_CSV_PATTERN = "^\\d+(,\\d+)*$";
-  private static final String ID_CSV_DELIMITER = ",";
 
   private final SongMetadataService service;
 
@@ -108,13 +105,7 @@ public class SongMetadataController {
       @Pattern(regexp = ID_CSV_PATTERN, message = "id must be a comma-separated list of positive integers")
       String id
   ) {
-    return ResponseEntity.ok(new DeleteSongMetadataResponse(service.deleteByIds(parseCsvIds(id))));
-  }
-
-  private List<Long> parseCsvIds(String csvIds) {
-    return Arrays.stream(csvIds.split(ID_CSV_DELIMITER))
-        .map(Long::parseLong)
-        .toList();
+    return ResponseEntity.ok(new DeleteSongMetadataResponse(service.deleteByCsv(id)));
   }
 }
 

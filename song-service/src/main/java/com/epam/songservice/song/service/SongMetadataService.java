@@ -21,6 +21,7 @@ public class SongMetadataService {
   private static final String METADATA_NOT_FOUND_MESSAGE = "Song metadata for ID=%d not found";
 
   private final SongMetadataRepository repository;
+  private final IdCsvParser idCsvParser;
 
   @Transactional
   public Long create(CreateSongMetadataRequest request) {
@@ -61,6 +62,11 @@ public class SongMetadataService {
     repository.flush();
     log.info("Deleted song metadata ids={}", deletedIds);
     return deletedIds;
+  }
+
+  @Transactional
+  public List<Long> deleteByCsv(String idsCsv) {
+    return deleteByIds(idCsvParser.parseIds(idsCsv));
   }
 
   private SongMetadata toEntity(CreateSongMetadataRequest request) {
