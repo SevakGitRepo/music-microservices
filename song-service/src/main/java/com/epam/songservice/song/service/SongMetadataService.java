@@ -17,8 +17,8 @@ import org.springframework.transaction.annotation.Transactional;
 @Slf4j
 public class SongMetadataService {
 
-  private static final String METADATA_CONFLICT_MESSAGE = "Metadata for id=%d already exists";
-  private static final String METADATA_NOT_FOUND_MESSAGE = "Metadata for id=%d not found";
+  private static final String METADATA_CONFLICT_MESSAGE = "Metadata for resource ID=%d already exists";
+  private static final String METADATA_NOT_FOUND_MESSAGE = "Song metadata for ID=%d not found";
 
   private final SongMetadataRepository repository;
 
@@ -54,10 +54,11 @@ public class SongMetadataService {
   @Transactional
   public List<Long> deleteByIds(List<Long> ids) {
     log.info("Deleting song metadata for ids={}", ids);
-    List<Long> deletedIds = ids.stream()
-        .filter(repository::existsById)
-        .peek(repository::deleteById)
+    List<Long> deletedIds = repository.findAllById(ids).stream()
+        .map(SongMetadata::getId)
         .toList();
+    repository.deleteAllById(deletedIds);
+    repository.flush();
     log.info("Deleted song metadata ids={}", deletedIds);
     return deletedIds;
   }

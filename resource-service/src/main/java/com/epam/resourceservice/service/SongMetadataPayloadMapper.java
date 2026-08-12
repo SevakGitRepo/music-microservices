@@ -38,31 +38,39 @@ public class SongMetadataPayloadMapper {
 
   private final Mp3MetadataExtractor metadataExtractor;
 
-  public MetadataFields mapRequiredFields(byte[] data) {
-    Map<String, String> metadata = metadataExtractor.extractMetadata(data);
-    log.debug("Extracted metadata: {}", metadata);
+   public MetadataFields mapRequiredFields(byte[] data) {
+     Map<String, String> metadata = metadataExtractor.extractMetadata(data);
+     log.debug("Extracted metadata: {}", metadata);
 
-    Map<String, String> details = new LinkedHashMap<>();
+     String name = getValue(metadata, NAME_KEYS);
+     String artist = getValue(metadata, ARTIST_KEYS);
+     String album = getValue(metadata, ALBUM_KEYS);
+     String duration = getValue(metadata, DURATION_KEYS);
+     String year = getValue(metadata, YEAR_KEYS);
 
-    String name = getValue(metadata, NAME_KEYS);
-    String artist = getValue(metadata, ARTIST_KEYS);
-    String album = getValue(metadata, ALBUM_KEYS);
-    String duration = getValue(metadata, DURATION_KEYS);
-    String year = getValue(metadata, YEAR_KEYS);
+     name = (name != null && !name.isBlank()) ? name : "Unknown Title";
+     artist = (artist != null && !artist.isBlank()) ? artist : "Unknown Artist";
+     album = (album != null && !album.isBlank()) ? album : "Unknown Album";
+     duration = (duration != null && !duration.isBlank()) ? duration : "00:00";
+     year = (year != null && !year.isBlank()) ? year : "1900";
 
-    validateLength(name, FIELD_NAME, NAME_LENGTH_MESSAGE, details);
-    validateLength(artist, FIELD_ARTIST, ARTIST_LENGTH_MESSAGE, details);
-    validateLength(album, FIELD_ALBUM, ALBUM_LENGTH_MESSAGE, details);
-    validateDuration(duration, details);
-    validateYear(year, details);
+     log.debug("Metadata after defaults applied: name={}, artist={}, album={}, duration={}, year={}",
+         name, artist, album, duration, year);
 
-    if (!details.isEmpty()) {
-      throw new ValidationException(details);
-    }
+     Map<String, String> details = new LinkedHashMap<>();
+     validateLength(name, FIELD_NAME, NAME_LENGTH_MESSAGE, details);
+     validateLength(artist, FIELD_ARTIST, ARTIST_LENGTH_MESSAGE, details);
+     validateLength(album, FIELD_ALBUM, ALBUM_LENGTH_MESSAGE, details);
+     validateDuration(duration, details);
+     validateYear(year, details);
 
+     if (!details.isEmpty()) {
+       log.warn("Validation errors for metadata: {}", details);
+       throw new ValidationException(details);
+     }
 
-    return new MetadataFields(name, artist, album, duration, year);
-  }
+     return new MetadataFields(name, artist, album, duration, year);
+   }
 
   public SongMetadataPayload toPayload(Long resourceId, MetadataFields fields) {
     return new SongMetadataPayload(
@@ -85,31 +93,24 @@ public class SongMetadataPayloadMapper {
     return null;
   }
 
-  private void validateLength(String value, String fieldName, String message, Map<String, String> details) {
-    if (value == null || value.isBlank()) {
-      details.put(fieldName, capitalize(fieldName) + " is required");
-      return;
-    }
-    if (value.length() > 100) {
-      details.put(fieldName, message);
-    }
-  }
+   private void validateLength(String value, String fieldName, String message, Map<String, String> details) {
+     if (value != null && !value.isBlank() && value.length() > 100) {
+       details.put(fieldName, message);
+     }
+   }
 
-  private void validateDuration(String duration, Map<String, String> details) {
-    if (duration == null || !DURATION_PATTERN.matcher(duration).matches()) {
-      details.put(FIELD_DURATION, DURATION_FORMAT_MESSAGE);
-    }
-  }
+   private void validateDuration(String duration, Map<String, String> details) {
+     if (duration != null && !DURATION_PATTERN.matcher(duration).matches()) {
+       details.put(FIELD_DURATION, DURATION_FORMAT_MESSAGE);
+     }
+   }
 
-  private void validateYear(String year, Map<String, String> details) {
-    if (year == null || !YEAR_PATTERN.matcher(year).matches()) {
-      details.put(FIELD_YEAR, YEAR_RANGE_MESSAGE);
-    }
-  }
+   private void validateYear(String year, Map<String, String> details) {
+     if (year != null && !YEAR_PATTERN.matcher(year).matches()) {
+       details.put(FIELD_YEAR, YEAR_RANGE_MESSAGE);
+     }
+   }
 
-  private String capitalize(String fieldName) {
-    return Character.toUpperCase(fieldName.charAt(0)) + fieldName.substring(1);
-  }
 
   public record MetadataFields(
       String name,

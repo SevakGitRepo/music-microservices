@@ -1,6 +1,5 @@
 package com.epam.songservice.song.dto;
 
-import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Pattern;
 import jakarta.validation.constraints.Positive;
@@ -19,24 +18,24 @@ public class CreateSongMetadataRequest {
   @Positive
   private Long id;
 
-  @NotBlank
-  @Size(min = 1, max = 100)
+  @NotNull(message = "Song name is required")
+  @Size(min = 1, max = 100, message = "Song name must be between 1 and 100 characters")
   private String name;
 
-  @NotBlank
-  @Size(min = 1, max = 100)
+  @NotNull(message = "Artist name is required")
+  @Size(min = 1, max = 100, message = "Artist name must be between 1 and 100 characters")
   private String artist;
 
-  @NotBlank
-  @Size(min = 1, max = 100)
+  @NotNull(message = "Album name is required")
+  @Size(min = 1, max = 100, message = "Album name must be between 1 and 100 characters")
   private String album;
 
-  @NotBlank
-  @Pattern(regexp = DURATION_PATTERN, message = "duration must match mm:ss")
+  @NotNull(message = "Duration is required")
+  @Pattern(regexp = DURATION_PATTERN, message = "Duration must be in mm:ss format with leading zeros")
   private String duration;
 
-  @NotBlank
-  @Pattern(regexp = YEAR_PATTERN, message = "year must be between 1900 and 2099")
+  @NotNull(message = "Year is required")
+  @Pattern(regexp = YEAR_PATTERN, message = "Year must be between 1900 and 2099")
   private String year;
 
 }

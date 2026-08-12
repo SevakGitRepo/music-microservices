@@ -6,7 +6,7 @@ import java.io.InputStream;
 import java.util.LinkedHashMap;
 import java.util.Map;
 import lombok.RequiredArgsConstructor;
-import org.apache.tika.Tika;
+import lombok.extern.slf4j.Slf4j;
 import org.apache.tika.metadata.Metadata;
 import org.apache.tika.parser.AutoDetectParser;
 import org.apache.tika.parser.ParseContext;
@@ -15,24 +15,20 @@ import org.xml.sax.helpers.DefaultHandler;
 
 @Component
 @RequiredArgsConstructor
+@Slf4j
 public class Mp3MetadataExtractor {
 
-  private static final String MP3_MIME = "audio/mpeg";
   private static final String INVALID_MP3_MESSAGE = "The request body is invalid MP3";
   private static final String XMP_DURATION_KEY = "xmpDM:duration";
   private static final String DURATION_KEY = "duration";
 
-  private final Tika tika;
   private final AutoDetectParser parser;
 
 
   public Map<String, String> extractMetadata(byte[] bytes) {
-    String detectedMime = tika.detect(bytes);
-    if (!MP3_MIME.equals(detectedMime)) {
-      throw invalidMp3Exception();
-    }
+    validateUploadPayload(bytes);
 
-    Metadata metadata = parseMetadata(bytes);
+    Metadata metadata = parseMetadataOrEmpty(bytes);
 
     Map<String, String> extracted = new LinkedHashMap<>();
     for (String name : metadata.names()) {
@@ -44,13 +40,24 @@ public class Mp3MetadataExtractor {
     return extracted;
   }
 
-  private Metadata parseMetadata(byte[] bytes) {
+  public void validateUploadPayload(byte[] bytes) {
+    if (bytes == null || bytes.length == 0) {
+      log.warn("MP3 validation failed: payload is empty");
+      throw invalidMp3Exception();
+    }
+
+    log.debug("Upload payload accepted, size={} bytes", bytes.length);
+  }
+
+  private Metadata parseMetadataOrEmpty(byte[] bytes) {
     Metadata metadata = new Metadata();
     try (InputStream inputStream = new ByteArrayInputStream(bytes)) {
       parser.parse(inputStream, new DefaultHandler(), metadata, new ParseContext());
       return metadata;
     } catch (Exception exception) {
-      throw invalidMp3Exception();
+
+      log.warn("MP3 metadata parsing failed, continuing without extracted tags", exception);
+      return metadata;
     }
   }
 
@@ -63,8 +70,8 @@ public class Mp3MetadataExtractor {
     try {
       double seconds = Double.parseDouble(rawDuration.trim());
       metadata.put(durationKey, toMmSs(seconds));
-    } catch (NumberFormatException ignored) {
-      // Keep original value untouched when duration cannot be parsed.
+    } catch (NumberFormatException exception) {
+      log.debug("Could not parse duration '{}' for key '{}': {}", rawDuration, durationKey, exception.getMessage());
     }
   }
 

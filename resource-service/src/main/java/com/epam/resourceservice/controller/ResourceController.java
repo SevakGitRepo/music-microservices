@@ -29,6 +29,8 @@ import org.springframework.web.bind.annotation.RestController;
 public class ResourceController {
 
   private static final String AUDIO_MPEG = "audio/mpeg";
+  private static final String AUDIO_MP3 = "audio/mp3";
+  private static final String AUDIO_X_MP3 = "audio/x-mp3";
 
   private final ResourceService resourceService;
 
@@ -40,8 +42,15 @@ public class ResourceController {
       @ApiResponse(responseCode = "400", description = "The request body is invalid MP3", content = @Content),
       @ApiResponse(responseCode = "500", description = "An error occurred on the server", content = @Content)
   })
-  @PostMapping(consumes = AUDIO_MPEG, produces = MediaType.APPLICATION_JSON_VALUE)
-  public ResponseEntity<UploadResourceResponse> upload(@RequestBody byte[] mp3Data) {
+  @PostMapping(
+      consumes = {
+          AUDIO_MPEG,
+          AUDIO_MP3,
+          AUDIO_X_MP3,
+          MediaType.APPLICATION_OCTET_STREAM_VALUE
+      },
+      produces = MediaType.APPLICATION_JSON_VALUE)
+  public ResponseEntity<UploadResourceResponse> upload(@RequestBody(required = false) byte[] mp3Data) {
     Long id = resourceService.upload(mp3Data);
     return ResponseEntity.ok(new UploadResourceResponse(id));
   }

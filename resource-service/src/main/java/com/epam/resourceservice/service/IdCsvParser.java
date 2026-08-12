@@ -13,7 +13,6 @@ public class IdCsvParser {
   private static final String CSV_DELIMITER = ",";
   private static final Pattern CSV_PATTERN = Pattern.compile("^\\d+(,\\d+)*$");
   private static final String REQUIRED_IDS_MESSAGE = "id query parameter is required";
-  private static final String MAX_LENGTH_MESSAGE = "id CSV string length must not exceed 200 characters";
   private static final String INVALID_FORMAT_MESSAGE = "id CSV string format is invalid";
   private static final String NON_POSITIVE_ID_MESSAGE = "id values must be positive integers";
 
@@ -32,11 +31,24 @@ public class IdCsvParser {
       throw new BadRequestException(REQUIRED_IDS_MESSAGE);
     }
     if (csv.length() > MAX_CSV_LENGTH) {
-      throw new BadRequestException(MAX_LENGTH_MESSAGE);
+      throw new BadRequestException("CSV string is too long: received " + csv.length()
+          + " characters, maximum allowed is 200");
     }
     if (!CSV_PATTERN.matcher(csv).matches()) {
-      throw new BadRequestException(INVALID_FORMAT_MESSAGE);
+      String invalidValue = findInvalidValue(csv);
+      throw new BadRequestException(
+          "Invalid ID format: '" + invalidValue + "'. Only positive integers are allowed");
     }
+  }
+
+  private String findInvalidValue(String csv) {
+    String[] parts = csv.split(CSV_DELIMITER);
+    for (String part : parts) {
+      if (!part.matches("\\d+")) {
+        return part;
+      }
+    }
+    return csv;
   }
 
   private List<Long> parseDistinctPositiveIds(String csv) {

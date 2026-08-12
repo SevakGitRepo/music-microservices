@@ -45,9 +45,9 @@ class GlobalExceptionHandlerTest {
     assertThat(response.getStatusCode()).isEqualTo(HttpStatus.BAD_REQUEST);
     assertThat(response.getHeaders().getContentType()).isEqualTo(MediaType.APPLICATION_JSON);
     assertThat(response.getBody()).isEqualTo(new ErrorResponse(
-        "Validation error",
+        "Missing required MP3 tag for field: duration",
         "400",
-        Map.of("request", "Missing required MP3 tag for field: duration")
+        null
     ));
   }
 
@@ -59,7 +59,7 @@ class GlobalExceptionHandlerTest {
     assertThat(response.getStatusCode()).isEqualTo(HttpStatus.NOT_FOUND);
     assertThat(response.getHeaders().getContentType()).isEqualTo(MediaType.APPLICATION_JSON);
     assertThat(response.getBody()).isEqualTo(new ErrorResponse(
-        "Resource with id=1 not found",
+        "Resource with ID=1 not found",
         "404",
         null
     ));
