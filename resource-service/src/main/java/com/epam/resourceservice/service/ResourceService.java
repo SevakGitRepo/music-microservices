@@ -34,14 +34,16 @@ public class ResourceService {
   @Transactional
   public Long upload(byte[] data) {
     byte[] payload = normalizeUploadPayload(data);
+
+    validateMp3Payload(payload);
     validateUploadSize(payload.length);
 
     log.info("Uploading new MP3 resource, size={} bytes", payload.length);
-    validateMp3Payload(payload);
 
     Resource saved = createAndSaveResource(payload);
     Long savedId = saved.getId();
-    log.info("Resource saved and persisted to database with id={}, size={} bytes", savedId, payload.length);
+    log.info("Resource saved and persisted to database with id={}, size={} bytes", savedId,
+        payload.length);
 
     syncMetadataBestEffort(savedId, payload);
     log.debug("Upload transaction completed successfully for resourceId={}", savedId);
@@ -80,7 +82,8 @@ public class ResourceService {
 
   private void validatePositiveId(Long id) {
     if (id == null || id <= 0) {
-      throw new BadRequestException("Invalid value '" + id + "' for ID. Must be a positive integer");
+      throw new BadRequestException(
+          "Invalid value '" + id + "' for ID. Must be a positive integer");
     }
   }
 
@@ -95,38 +98,44 @@ public class ResourceService {
     log.info("MP3 validation successful for file size {} bytes", data.length);
   }
 
+  private byte[] normalizeUploadPayload(byte[] data) {
+    if (data == null || data.length == 0) {
+      log.warn("Upload payload is empty. Using fallback MP3 signature bytes.");
+      return FALLBACK_MP3_BYTES;
+    }
+    return data;
+  }
+
   private void validateUploadSize(int payloadSize) {
     if (payloadSize > MAX_UPLOAD_BYTES) {
       throw new BadRequestException("The request body is too large");
     }
   }
 
-  private byte[] normalizeUploadPayload(byte[] data) {
-    if (data == null || data.length == 0) {
-      log.warn("Upload payload is empty. Using fallback MP3 bytes to keep resource flow consistent.");
-      return FALLBACK_MP3_BYTES;
-    }
-    return data;
-  }
 
   private void syncMetadataBestEffort(Long resourceId, byte[] data) {
     try {
       log.debug("Attempting to extract and sync metadata for resourceId={}", resourceId);
-      SongMetadataPayloadMapper.MetadataFields metadataFields = metadataPayloadMapper.mapRequiredFields(data);
+      SongMetadataPayloadMapper.MetadataFields metadataFields = metadataPayloadMapper.mapRequiredFields(
+          data);
       SongMetadataPayload payload = metadataPayloadMapper.toPayload(resourceId, metadataFields);
       log.debug("Extracted metadata: name={}, artist={}, album={}, duration={}, year={}",
           payload.name(), payload.artist(), payload.album(), payload.duration(), payload.year());
       songClient.sendMetadata(payload);
-      log.info("Successfully synced metadata to Song Service for resourceId={}: name={}, artist={}, album={}, duration={}, year={}",
-          resourceId, payload.name(), payload.artist(), payload.album(), payload.duration(), payload.year());
+      log.info(
+          "Successfully synced metadata to Song Service for resourceId={}: name={}, artist={}, album={}, duration={}, year={}",
+          resourceId, payload.name(), payload.artist(), payload.album(), payload.duration(),
+          payload.year());
     } catch (ValidationException validationException) {
       log.warn("Metadata validation failed for resourceId={}: {}. Metadata sync will be skipped.",
           resourceId, validationException.getDetails());
     } catch (IllegalStateException illegalStateException) {
-      log.warn("Failed to send metadata to Song Service for resourceId={}: {}. Metadata sync will be skipped.",
+      log.warn(
+          "Failed to send metadata to Song Service for resourceId={}: {}. Metadata sync will be skipped.",
           resourceId, illegalStateException.getMessage());
     } catch (Exception exception) {
-      log.warn("Unexpected error during metadata sync for resourceId={}: {}. Metadata sync will be skipped.",
+      log.warn(
+          "Unexpected error during metadata sync for resourceId={}: {}. Metadata sync will be skipped.",
           resourceId, exception.getMessage(), exception);
     }
   }
@@ -134,7 +143,8 @@ public class ResourceService {
   private Resource createAndSaveResource(byte[] data) {
     Resource resource = resourceRepository.save(new Resource(data));
     resourceRepository.flush();
-    log.debug("Resource persisted to database with id={}, data size={} bytes", resource.getId(), data.length);
+    log.debug("Resource persisted to database with id={}, data size={} bytes", resource.getId(),
+        data.length);
     return resource;
   }
 

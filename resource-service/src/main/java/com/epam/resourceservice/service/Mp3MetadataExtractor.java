@@ -7,6 +7,7 @@ import java.util.LinkedHashMap;
 import java.util.Map;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.tika.Tika;
 import org.apache.tika.metadata.Metadata;
 import org.apache.tika.parser.AutoDetectParser;
 import org.apache.tika.parser.ParseContext;
@@ -18,10 +19,14 @@ import org.xml.sax.helpers.DefaultHandler;
 @Slf4j
 public class Mp3MetadataExtractor {
 
+  private static final String MP3_MIME = "audio/mpeg";
+  private static final String MP3_MIME_ALT_1 = "audio/mp3";
+  private static final String MP3_MIME_ALT_2 = "audio/x-mp3";
   private static final String INVALID_MP3_MESSAGE = "The request body is invalid MP3";
   private static final String XMP_DURATION_KEY = "xmpDM:duration";
   private static final String DURATION_KEY = "duration";
 
+  private final Tika tika;
   private final AutoDetectParser parser;
 
 
@@ -46,7 +51,49 @@ public class Mp3MetadataExtractor {
       throw invalidMp3Exception();
     }
 
-    log.debug("Upload payload accepted, size={} bytes", bytes.length);
+    boolean hasMp3Signature = hasId3Tag(bytes) || hasMpegFrameSync(bytes);
+    String detectedMime = detectMimeOrThrow(bytes);
+    boolean hasMp3Mime = isSupportedMp3Mime(detectedMime);
+
+    if (!hasMp3Signature && !hasMp3Mime) {
+      log.warn("MP3 validation failed: missing MP3 signature and MIME is '{}'", detectedMime);
+      throw invalidMp3Exception();
+    }
+
+    log.debug("MP3 validation passed, size={} bytes, signatureMatch={}, mime={}",
+        bytes.length, hasMp3Signature, detectedMime);
+  }
+
+  private String detectMimeOrThrow(byte[] bytes) {
+    try {
+      return tika.detect(bytes);
+    } catch (RuntimeException exception) {
+      log.warn("MP3 validation failed during MIME detection", exception);
+      throw invalidMp3Exception();
+    }
+  }
+
+  private boolean isSupportedMp3Mime(String mime) {
+    return MP3_MIME.equals(mime)
+        || MP3_MIME_ALT_1.equals(mime)
+        || MP3_MIME_ALT_2.equals(mime);
+  }
+
+
+  private boolean hasId3Tag(byte[] bytes) {
+    return bytes.length >= 3
+        && bytes[0] == 'I'
+        && bytes[1] == 'D'
+        && bytes[2] == '3';
+  }
+
+  private boolean hasMpegFrameSync(byte[] bytes) {
+    if (bytes.length < 2) {
+      return false;
+    }
+    int first = bytes[0] & 0xFF;
+    int second = bytes[1] & 0xFF;
+    return first == 0xFF && (second & 0xE0) == 0xE0;
   }
 
   private Metadata parseMetadataOrEmpty(byte[] bytes) {
@@ -71,7 +118,8 @@ public class Mp3MetadataExtractor {
       double seconds = Double.parseDouble(rawDuration.trim());
       metadata.put(durationKey, toMmSs(seconds));
     } catch (NumberFormatException exception) {
-      log.debug("Could not parse duration '{}' for key '{}': {}", rawDuration, durationKey, exception.getMessage());
+      log.debug("Could not parse duration '{}' for key '{}': {}", rawDuration, durationKey,
+          exception.getMessage());
     }
   }
 
