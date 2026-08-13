@@ -20,8 +20,6 @@ import org.xml.sax.helpers.DefaultHandler;
 public class Mp3MetadataExtractor {
 
   private static final String MP3_MIME = "audio/mpeg";
-  private static final String MP3_MIME_ALT_1 = "audio/mp3";
-  private static final String MP3_MIME_ALT_2 = "audio/x-mp3";
   private static final String INVALID_MP3_MESSAGE = "The request body is invalid MP3";
   private static final String XMP_DURATION_KEY = "xmpDM:duration";
   private static final String DURATION_KEY = "duration";
@@ -53,7 +51,7 @@ public class Mp3MetadataExtractor {
 
     boolean hasMp3Signature = hasId3Tag(bytes) || hasMpegFrameSync(bytes);
     String detectedMime = detectMimeOrThrow(bytes);
-    boolean hasMp3Mime = isSupportedMp3Mime(detectedMime);
+    boolean hasMp3Mime = MP3_MIME.equals(detectedMime);
 
     if (!hasMp3Signature && !hasMp3Mime) {
       log.warn("MP3 validation failed: missing MP3 signature and MIME is '{}'", detectedMime);
@@ -72,13 +70,6 @@ public class Mp3MetadataExtractor {
       throw invalidMp3Exception();
     }
   }
-
-  private boolean isSupportedMp3Mime(String mime) {
-    return MP3_MIME.equals(mime)
-        || MP3_MIME_ALT_1.equals(mime)
-        || MP3_MIME_ALT_2.equals(mime);
-  }
-
 
   private boolean hasId3Tag(byte[] bytes) {
     return bytes.length >= 3

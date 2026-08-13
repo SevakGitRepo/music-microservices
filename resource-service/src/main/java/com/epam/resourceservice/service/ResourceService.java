@@ -5,7 +5,6 @@ import com.epam.resourceservice.dto.SongMetadataPayload;
 import com.epam.resourceservice.entity.Resource;
 import com.epam.resourceservice.exception.BadRequestException;
 import com.epam.resourceservice.exception.NotFoundException;
-import com.epam.resourceservice.exception.ValidationException;
 import com.epam.resourceservice.repository.ResourceRepository;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
@@ -31,6 +30,8 @@ public class ResourceService {
   public Long upload(byte[] data) {
     validateMp3Payload(data);
     validateUploadSize(data.length);
+    SongMetadataPayloadMapper.MetadataFields metadataFields =
+        metadataPayloadMapper.mapRequiredFields(data);
 
     log.info("Uploading new MP3 resource, size={} bytes", data.length);
 
@@ -39,7 +40,7 @@ public class ResourceService {
     log.info("Resource saved and persisted to database with id={}, size={} bytes", savedId,
         data.length);
 
-    syncMetadataBestEffort(savedId, data);
+    syncMetadata(savedId, metadataFields);
     log.debug("Upload transaction completed successfully for resourceId={}", savedId);
     return savedId;
   }
@@ -97,34 +98,26 @@ public class ResourceService {
   }
 
 
-  private void syncMetadataBestEffort(Long resourceId, byte[] data) {
+  private void syncMetadata(Long resourceId,
+      SongMetadataPayloadMapper.MetadataFields metadataFields) {
+
+    log.debug("Attempting to sync metadata for resourceId={}", resourceId);
+    SongMetadataPayload payload = metadataPayloadMapper.toPayload(resourceId, metadataFields);
+
+    log.debug("Extracted metadata: name={}, artist={}, album={}, duration={}, year={}",
+        payload.name(), payload.artist(), payload.album(), payload.duration(), payload.year());
+
     try {
-      log.debug("Attempting to extract and sync metadata for resourceId={}", resourceId);
-      SongMetadataPayloadMapper.MetadataFields metadataFields = metadataPayloadMapper.mapRequiredFields(
-          data);
-      SongMetadataPayload payload = metadataPayloadMapper.toPayload(resourceId, metadataFields);
-      log.debug("Extracted metadata: name={}, artist={}, album={}, duration={}, year={}",
-          payload.name(), payload.artist(), payload.album(), payload.duration(), payload.year());
       songClient.sendMetadata(payload);
-      log.info(
-          "Successfully synced metadata to Song Service for resourceId={}: name={}, artist={}, album={}, duration={}, year={}",
-          resourceId, payload.name(), payload.artist(), payload.album(), payload.duration(),
-          payload.year());
-    } catch (ValidationException validationException) {
-      log.warn("Metadata validation failed for resourceId={}: {}. Metadata sync will be skipped.",
-          resourceId, validationException.getDetails());
-      throw validationException;
-    } catch (IllegalStateException illegalStateException) {
-      log.warn(
-          "Failed to send metadata to Song Service for resourceId={}: {}. Metadata sync will be skipped.",
-          resourceId, illegalStateException.getMessage());
-      throw illegalStateException;
-    } catch (Exception exception) {
-      log.warn(
-          "Unexpected error during metadata sync for resourceId={}: {}. Metadata sync will be skipped.",
-          resourceId, exception.getMessage(), exception);
-      throw exception;
+    } catch (Exception e) {
+      log.error("Failed to send metadata to Song Service for resourceId={}", resourceId, e);
+      throw new IllegalStateException("Failed to send metadata to Song Service", e);
     }
+
+    log.info(
+        "Successfully synced metadata to Song Service for resourceId={}: name={}, artist={}, album={}, duration={}, year={}",
+        resourceId, payload.name(), payload.artist(), payload.album(), payload.duration(),
+        payload.year());
   }
 
   private Resource createAndSaveResource(byte[] data) {
