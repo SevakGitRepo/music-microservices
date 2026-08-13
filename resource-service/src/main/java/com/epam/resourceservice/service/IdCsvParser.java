@@ -32,7 +32,7 @@ public class IdCsvParser {
     }
     if (csv.length() > MAX_CSV_LENGTH) {
       throw new BadRequestException("CSV string is too long: received " + csv.length()
-          + " characters, maximum allowed is 200");
+          + " characters, maximum allowed is " + MAX_CSV_LENGTH);
     }
     if (!CSV_PATTERN.matcher(csv).matches()) {
       String invalidValue = findInvalidValue(csv);

@@ -30,8 +30,8 @@ public class GlobalExceptionHandler {
   private static final String INTERNAL_ERROR_CODE = "500";
   private static final String INTERNAL_ERROR_MESSAGE = "An error occurred on the server";
   private static final String INVALID_MP3_MESSAGE = "The request body is invalid MP3";
-  private static final String INVALID_FILE_FORMAT_PREFIX = "Invalid file format: ";
-  private static final String MP3_ONLY_SUFFIX = ". Only MP3 files are allowed";
+  private static final String UNSUPPORTED_FORMAT_MESSAGE =
+      "Invalid file format: %s. Only MP3 files are allowed";
 
   @ExceptionHandler(ValidationException.class)
   public ResponseEntity<ErrorResponse> handleStructuredValidation(ValidationException exception) {
@@ -61,7 +61,7 @@ public class GlobalExceptionHandler {
     String contentType = exception.getContentType() == null
         ? "unknown"
         : exception.getContentType().toString();
-    String message = INVALID_FILE_FORMAT_PREFIX + contentType + MP3_ONLY_SUFFIX;
+    String message = UNSUPPORTED_FORMAT_MESSAGE.formatted(contentType);
     return errorResponse(HttpStatus.BAD_REQUEST,
         new ErrorResponse(message, VALIDATION_ERROR_CODE, null));
   }

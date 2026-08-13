@@ -30,47 +30,51 @@ public class SongMetadataPayloadMapper {
   private static final Pattern DURATION_PATTERN = Pattern.compile("^[0-5]\\d:[0-5]\\d$");
   private static final Pattern YEAR_PATTERN = Pattern.compile("^(19\\d{2}|20\\d{2})$");
 
-  private static final List<String> NAME_KEYS = List.of("title", "dc:title", "xmpDM:title", "Title");
-  private static final List<String> ARTIST_KEYS = List.of("xmpDM:artist", "artist", "Author", "dc:creator");
-  private static final List<String> ALBUM_KEYS = List.of("xmpDM:album", "album", "xmpDM:releaseName");
+  private static final List<String> NAME_KEYS = List.of("title", "dc:title", "xmpDM:title",
+      "Title");
+  private static final List<String> ARTIST_KEYS = List.of("xmpDM:artist", "artist", "Author",
+      "dc:creator");
+  private static final List<String> ALBUM_KEYS = List.of("xmpDM:album", "album",
+      "xmpDM:releaseName");
   private static final List<String> DURATION_KEYS = List.of("duration", "xmpDM:duration");
-  private static final List<String> YEAR_KEYS = List.of("xmpDM:releaseDate", "xmpDM:releaseYear", "year", "xmpDM:year", "Year");
+  private static final List<String> YEAR_KEYS = List.of("xmpDM:releaseDate", "xmpDM:releaseYear",
+      "year", "xmpDM:year", "Year");
 
   private final Mp3MetadataExtractor metadataExtractor;
 
-    public MetadataFields mapRequiredFields(byte[] data) {
-      Map<String, String> metadata = metadataExtractor.extractMetadata(data);
-      log.debug("Extracted metadata: {}", metadata);
+  public MetadataFields mapRequiredFields(byte[] data) {
+    Map<String, String> metadata = metadataExtractor.extractMetadata(data);
+    log.debug("Extracted metadata: {}", metadata);
 
-      String name = getValue(metadata, NAME_KEYS);
-      String artist = getValue(metadata, ARTIST_KEYS);
-      String album = getValue(metadata, ALBUM_KEYS);
-      String duration = getValue(metadata, DURATION_KEYS);
-      String year = getValue(metadata, YEAR_KEYS);
+    String name = getValue(metadata, NAME_KEYS);
+    String artist = getValue(metadata, ARTIST_KEYS);
+    String album = getValue(metadata, ALBUM_KEYS);
+    String duration = getValue(metadata, DURATION_KEYS);
+    String year = getValue(metadata, YEAR_KEYS);
 
-      log.debug("Extracted metadata fields: name={}, artist={}, album={}, duration={}, year={}",
-          name, artist, album, duration, year);
+    log.debug("Extracted metadata fields: name={}, artist={}, album={}, duration={}, year={}",
+        name, artist, album, duration, year);
 
-      Map<String, String> details = new LinkedHashMap<>();
-      validateNotBlank(name, FIELD_NAME, details);
-      validateNotBlank(artist, FIELD_ARTIST, details);
-      validateNotBlank(album, FIELD_ALBUM, details);
-      validateNotBlank(duration, FIELD_DURATION, details);
-      validateNotBlank(year, FIELD_YEAR, details);
+    Map<String, String> details = new LinkedHashMap<>();
+    validateNotBlank(name, FIELD_NAME, details);
+    validateNotBlank(artist, FIELD_ARTIST, details);
+    validateNotBlank(album, FIELD_ALBUM, details);
+    validateNotBlank(duration, FIELD_DURATION, details);
+    validateNotBlank(year, FIELD_YEAR, details);
 
-      validateLength(name, FIELD_NAME, NAME_LENGTH_MESSAGE, details);
-      validateLength(artist, FIELD_ARTIST, ARTIST_LENGTH_MESSAGE, details);
-      validateLength(album, FIELD_ALBUM, ALBUM_LENGTH_MESSAGE, details);
-      validateDuration(duration, details);
-      validateYear(year, details);
+    validateLength(name, FIELD_NAME, NAME_LENGTH_MESSAGE, details);
+    validateLength(artist, FIELD_ARTIST, ARTIST_LENGTH_MESSAGE, details);
+    validateLength(album, FIELD_ALBUM, ALBUM_LENGTH_MESSAGE, details);
+    validateDuration(duration, details);
+    validateYear(year, details);
 
-      if (!details.isEmpty()) {
-        log.warn("Validation errors for metadata: {}", details);
-        throw new ValidationException(details);
-      }
-
-      return new MetadataFields(name, artist, album, duration, year);
+    if (!details.isEmpty()) {
+      log.warn("Validation errors for metadata: {}", details);
+      throw new ValidationException(details);
     }
+
+    return new MetadataFields(name, artist, album, duration, year);
+  }
 
   public SongMetadataPayload toPayload(Long resourceId, MetadataFields fields) {
     return new SongMetadataPayload(
@@ -83,40 +87,41 @@ public class SongMetadataPayloadMapper {
     );
   }
 
-   private String getValue(Map<String, String> metadata, List<String> keys) {
-     for (String key : keys) {
-       String value = metadata.get(key);
-       if (value != null && !value.isBlank()) {
-         return value;
-       }
-     }
-     return null;
-   }
+  private String getValue(Map<String, String> metadata, List<String> keys) {
+    for (String key : keys) {
+      String value = metadata.get(key);
+      if (value != null && !value.isBlank()) {
+        return value;
+      }
+    }
+    return null;
+  }
 
-   private void validateNotBlank(String value, String fieldName, Map<String, String> details) {
-     if (value == null || value.isBlank()) {
-       details.put(fieldName, fieldName + " is required");
-     }
-   }
+  private void validateNotBlank(String value, String fieldName, Map<String, String> details) {
+    if (value == null || value.isBlank()) {
+      details.put(fieldName, fieldName + " is required");
+    }
+  }
 
 
-   private void validateLength(String value, String fieldName, String message, Map<String, String> details) {
-     if (value != null && !value.isBlank() && value.length() > 100) {
-       details.put(fieldName, message);
-     }
-   }
+  private void validateLength(String value, String fieldName, String message,
+      Map<String, String> details) {
+    if (value != null && !value.isBlank() && value.length() > 100) {
+      details.put(fieldName, message);
+    }
+  }
 
-   private void validateDuration(String duration, Map<String, String> details) {
-     if (duration != null && !DURATION_PATTERN.matcher(duration).matches()) {
-       details.put(FIELD_DURATION, DURATION_FORMAT_MESSAGE);
-     }
-   }
+  private void validateDuration(String duration, Map<String, String> details) {
+    if (duration != null && !DURATION_PATTERN.matcher(duration).matches()) {
+      details.put(FIELD_DURATION, DURATION_FORMAT_MESSAGE);
+    }
+  }
 
-   private void validateYear(String year, Map<String, String> details) {
-     if (year != null && !YEAR_PATTERN.matcher(year).matches()) {
-       details.put(FIELD_YEAR, YEAR_RANGE_MESSAGE);
-     }
-   }
+  private void validateYear(String year, Map<String, String> details) {
+    if (year != null && !YEAR_PATTERN.matcher(year).matches()) {
+      details.put(FIELD_YEAR, YEAR_RANGE_MESSAGE);
+    }
+  }
 
 
   public record MetadataFields(
@@ -126,5 +131,6 @@ public class SongMetadataPayloadMapper {
       String duration,
       String year
   ) {
+
   }
 }

@@ -2,13 +2,12 @@ package com.epam.resourceservice.service;
 
 import com.epam.resourceservice.dto.SongMetadataPayload;
 import java.util.List;
-import java.util.stream.Collectors;
 import java.util.function.Consumer;
+import java.util.stream.Collectors;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.MediaType;
 import org.springframework.stereotype.Component;
-import org.springframework.web.client.HttpClientErrorException;
 import org.springframework.web.client.RestClient;
 import org.springframework.web.client.RestClientException;
 
@@ -38,7 +37,8 @@ public class SongClient {
             .retrieve()
             .toBodilessEntity(),
         SEND_METADATA_ERROR_MESSAGE,
-        exception -> log.error("Failed to send metadata to Song Service for resourceId={}", payload.id(), exception),
+        exception -> log.error("Failed to send metadata to Song Service for resourceId={}",
+            payload.id(), exception),
         () -> log.debug("Metadata successfully sent for resourceId={}", payload.id()));
   }
 
@@ -56,23 +56,9 @@ public class SongClient {
             .retrieve()
             .toBodilessEntity(),
         DELETE_METADATA_ERROR_MESSAGE,
-        exception -> log.error("Failed to delete metadata in Song Service for ids={}", ids, exception),
+        exception -> log.error("Failed to delete metadata in Song Service for ids={}", ids,
+            exception),
         () -> log.debug("Metadata deletion confirmed in Song Service for ids={}", ids));
-  }
-
-  public boolean metadataExists(Long id) {
-    try {
-      restClient.get()
-          .uri(uriBuilder -> uriBuilder.path(metadataEndpoint + "/{id}").build(id))
-          .retrieve()
-          .toBodilessEntity();
-      return true;
-    } catch (HttpClientErrorException.NotFound exception) {
-      return false;
-    } catch (RestClientException exception) {
-      log.warn("Failed to verify Song Service metadata existence for id={}", id, exception);
-      return false;
-    }
   }
 
   private String toCsv(List<Long> ids) {
