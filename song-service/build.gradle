@@ -27,3 +27,7 @@ dependencies {
     runtimeOnly 'org.postgresql:postgresql'
     annotationProcessor 'org.projectlombok:lombok'
 }
+
+tasks.named('jar') {
+    enabled = false
+}
