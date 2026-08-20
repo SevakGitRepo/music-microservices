@@ -10,7 +10,6 @@ services:
     ports:
       - "5432:5432"
     volumes:
-      - resource-postgres-data:/var/lib/postgresql/data
       - ./init-scripts/resource:/docker-entrypoint-initdb.d
 
   song-postgres:
@@ -23,7 +22,6 @@ services:
     ports:
       - "5433:5432"
     volumes:
-      - song-postgres-data:/var/lib/postgresql/data
       - ./init-scripts/song:/docker-entrypoint-initdb.d
 
   resource-service:
@@ -62,6 +60,3 @@ services:
     depends_on:
       - song-postgres
 
-volumes:
-  resource-postgres-data:
-  song-postgres-data:
