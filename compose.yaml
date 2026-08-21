@@ -4,26 +4,59 @@ services:
     image: postgres:16-alpine
     container_name: resource-postgres
     environment:
-      POSTGRES_DB: resource_db
-      POSTGRES_USER: postgres
-      POSTGRES_PASSWORD: postgres
+      POSTGRES_DB: ${RESOURCE_POSTGRES_DB}
+      POSTGRES_USER: ${RESOURCE_POSTGRES_USER}
+      POSTGRES_PASSWORD: ${RESOURCE_POSTGRES_PASSWORD}
     ports:
       - "5432:5432"
     volumes:
-      - resource-postgres-data:/var/lib/postgresql/data
+      - ./init-scripts/resource:/docker-entrypoint-initdb.d
 
   song-postgres:
     image: postgres:16-alpine
     container_name: song-postgres
     environment:
-      POSTGRES_DB: song_db
-      POSTGRES_USER: postgres
-      POSTGRES_PASSWORD: postgres
+      POSTGRES_DB: ${SONG_POSTGRES_DB}
+      POSTGRES_USER: ${SONG_POSTGRES_USER}
+      POSTGRES_PASSWORD: ${SONG_POSTGRES_PASSWORD}
     ports:
       - "5433:5432"
     volumes:
-      - song-postgres-data:/var/lib/postgresql/data
+      - ./init-scripts/song:/docker-entrypoint-initdb.d
 
-volumes:
-  resource-postgres-data:
-  song-postgres-data:
+  resource-service:
+    #    For ARM architecture
+    platform: linux/amd64
+    build:
+      context: .
+      dockerfile: resource-service/Dockerfile
+    container_name: resource-service
+    ports:
+      - "8080:8080"
+    environment:
+      SPRING_DATASOURCE_URL: ${RESOURCE_DB_URL}
+      SPRING_DATASOURCE_USERNAME: ${RESOURCE_POSTGRES_USER}
+      SPRING_DATASOURCE_PASSWORD: ${RESOURCE_POSTGRES_PASSWORD}
+      SONG_SERVICE_BASE_URL: ${SONG_SERVICE_URL}
+    env_file: .env
+    depends_on:
+      - resource-postgres
+      - song-postgres
+
+  song-service:
+    #    For ARM architecture
+    platform: linux/amd64
+    build:
+      context: .
+      dockerfile: song-service/Dockerfile
+    container_name: song-service
+    ports:
+      - "8081:8081"
+    environment:
+      SPRING_DATASOURCE_URL: ${SONG_DB_URL}
+      SPRING_DATASOURCE_USERNAME: ${SONG_POSTGRES_USER}
+      SPRING_DATASOURCE_PASSWORD: ${SONG_POSTGRES_PASSWORD}
+    env_file: .env
+    depends_on:
+      - song-postgres
+
