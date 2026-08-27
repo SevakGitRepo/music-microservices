@@ -12,7 +12,7 @@ public class HttpClientConfig {
 
   @Bean
   public RestClient restClient(
-      @Value("${song.service.base-url:http://localhost:8081}") String baseUrl) {
+      @Value("${song.service.base-url:http://localhost:8082}") String baseUrl) {
     return RestClient.builder().baseUrl(baseUrl).build();
   }
 

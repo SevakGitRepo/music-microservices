@@ -14,17 +14,18 @@ RUN cp settings.gradle settings.gradle.orig \
 
 RUN chmod +x ./gradlew && ./gradlew dependencies --no-daemon
 
-RUN mv settings.gradle.orig settings.gradle
 COPY resource-service/ ./resource-service/
 COPY song-service/ ./song-service/
 
 RUN ./gradlew :song-service:clean :song-service:assemble --no-daemon -x test
+
+RUN mv settings.gradle.orig settings.gradle
 
 FROM eclipse-temurin:17-jre-alpine
 WORKDIR /app
 
 COPY --from=build /app/song-service/build/libs/*.jar app.jar
 
-EXPOSE 8081
+EXPOSE 8082
 
 CMD ["java", "-jar", "app.jar"]
