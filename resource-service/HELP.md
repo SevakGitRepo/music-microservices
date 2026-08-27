@@ -4,7 +4,7 @@
 
 ## Base URL and API prefix
 
-- Local port: `8080`
+- Local port: `8081`
 - Base path: `/api/v1/resources`
 
 ## Endpoints
@@ -77,8 +77,8 @@
 
 `src/main/resources/application.properties`:
 
-- `server.port=8080`
-- `song.service.base-url=http://localhost:8081`
+- `server.port=8081`
+- `song.service.base-url=http://localhost:8082`
 - `song.service.metadata-endpoint=/api/v1/songs`
 - `spring.datasource.url=jdbc:postgresql://localhost:5432/resource_db`
 - `spring.datasource.username=postgres`
@@ -111,14 +111,14 @@ From repo root:
 
 When service is running:
 
-- `http://localhost:8080/swagger-ui/index.html`
+- `http://localhost:8081/swagger-ui/index.html`
 
 ## Quick curl examples
 
 Upload:
 
 ```zsh
-curl -i -X POST "http://localhost:8080/api/v1/resources" \
+curl -i -X POST "http://localhost:8081/api/v1/resources" \
   -H "Content-Type: audio/mpeg" \
   --data-binary "@/absolute/path/to/file.mp3"
 ```
@@ -126,12 +126,12 @@ curl -i -X POST "http://localhost:8080/api/v1/resources" \
 Get binary:
 
 ```zsh
-curl -i "http://localhost:8080/api/v1/resources/1" -o resource-1.mp3
+curl -i "http://localhost:8081/api/v1/resources/1" -o resource-1.mp3
 ```
 
 Delete:
 
 ```zsh
-curl -i -X DELETE "http://localhost:8080/api/v1/resources?id=1,2"
+curl -i -X DELETE "http://localhost:8081/api/v1/resources?id=1,2"
 ```
 

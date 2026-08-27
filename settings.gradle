@@ -2,4 +2,6 @@ rootProject.name = 'music-microservices'
 
 include 'resource-service'
 include 'song-service'
+include 'service-registry'
+include 'api-gateway'
 

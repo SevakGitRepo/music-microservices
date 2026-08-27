@@ -24,39 +24,71 @@ services:
     volumes:
       - ./init-scripts/song:/docker-entrypoint-initdb.d
 
+  service-registry:
+    platform: linux/amd64
+    build:
+      context: .
+      dockerfile: service-registry/Dockerfile
+    container_name: service-registry
+    ports:
+      - "8761:8761"
+    environment:
+      EUREKA_CLIENT_SERVICE_URL_DEFAULTZONE: ${EUREKA_CLIENT_SERVICE_URL_DEFAULTZONE}
+    env_file: .env
+
+  api-gateway:
+    platform: linux/amd64
+    build:
+      context: .
+      dockerfile: api-gateway/Dockerfile
+    container_name: api-gateway
+    ports:
+      - "8080:8080"
+    environment:
+      EUREKA_CLIENT_SERVICE_URL_DEFAULTZONE: ${EUREKA_CLIENT_SERVICE_URL_DEFAULTZONE}
+    env_file: .env
+    depends_on:
+      - service-registry
+
   resource-service:
-    #    For ARM architecture
     platform: linux/amd64
     build:
       context: .
       dockerfile: resource-service/Dockerfile
     container_name: resource-service
     ports:
-      - "8080:8080"
+      - "8081:8081"
     environment:
       SPRING_DATASOURCE_URL: ${RESOURCE_DB_URL}
       SPRING_DATASOURCE_USERNAME: ${RESOURCE_POSTGRES_USER}
       SPRING_DATASOURCE_PASSWORD: ${RESOURCE_POSTGRES_PASSWORD}
-      SONG_SERVICE_BASE_URL: ${SONG_SERVICE_URL}
+      SONG_SERVICE_BASE_URL: ${SONG_SERVICE_BASE_URL}
+      SONG_SERVICE_METADATA_ENDPOINT: ${SONG_SERVICE_METADATA_ENDPOINT}
+      EUREKA_CLIENT_SERVICE_URL_DEFAULTZONE: ${EUREKA_CLIENT_SERVICE_URL_DEFAULTZONE}
     env_file: .env
     depends_on:
       - resource-postgres
       - song-postgres
+      - service-registry
+      - api-gateway
 
   song-service:
-    #    For ARM architecture
     platform: linux/amd64
     build:
       context: .
       dockerfile: song-service/Dockerfile
-    container_name: song-service
-    ports:
-      - "8081:8081"
     environment:
       SPRING_DATASOURCE_URL: ${SONG_DB_URL}
       SPRING_DATASOURCE_USERNAME: ${SONG_POSTGRES_USER}
       SPRING_DATASOURCE_PASSWORD: ${SONG_POSTGRES_PASSWORD}
+      EUREKA_CLIENT_SERVICE_URL_DEFAULTZONE: ${EUREKA_CLIENT_SERVICE_URL_DEFAULTZONE}
     env_file: .env
     depends_on:
       - song-postgres
+      - service-registry
+    deploy:
+      replicas: 2
+    ports:
+      - "8082-8083:8082"
+
 

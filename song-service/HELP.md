@@ -4,7 +4,7 @@
 
 ## Base URL
 
-- Local port: `8081`
+- Local port: `8082`
 - Base path: `/api/v1/songs`
 
 ## Features
@@ -137,7 +137,7 @@
 
 `src/main/resources/application.properties`:
 
-- `server.port=8081`
+- `server.port=8082`
 - `spring.datasource.url=jdbc:postgresql://localhost:5433/song_db`
 - `spring.datasource.username=postgres`
 - `spring.datasource.password=postgres`
@@ -170,14 +170,14 @@ From the repository root:
 
 When the service is running:
 
-- `http://localhost:8081/swagger-ui/index.html`
+- `http://localhost:8082/swagger-ui/index.html`
 
 ## Quick curl examples
 
 Create metadata:
 
 ```zsh
-curl -i -X POST "http://localhost:8081/api/v1/songs" \
+curl -i -X POST "http://localhost:8082/api/v1/songs" \
   -H "Content-Type: application/json" \
   -d '{
 	"id": 1,
@@ -192,13 +192,13 @@ curl -i -X POST "http://localhost:8081/api/v1/songs" \
 Get metadata:
 
 ```zsh
-curl -i "http://localhost:8081/api/v1/songs/1"
+curl -i "http://localhost:8082/api/v1/songs/1"
 ```
 
 Delete metadata:
 
 ```zsh
-curl -i -X DELETE "http://localhost:8081/api/v1/songs?id=1,2"
+curl -i -X DELETE "http://localhost:8082/api/v1/songs?id=1,2"
 ```
 
 ## Notes
