@@ -30,7 +30,7 @@ dependencies {
     implementation 'org.springframework.cloud:spring-cloud-starter-loadbalancer'
 
     // macOS native DNS resolver for Netty to avoid the UnsatisfiedLinkError warning on macOS hosts
-    implementation "io.netty:netty-resolver-dns-native-macos:${nettyResolverDnsNativeMacosVersion}"
+    implementation "io.netty:netty-resolver-dns-native-macos:4.2.15.Final"
 }
 
 tasks.named('jar') {
